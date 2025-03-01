@@ -11,10 +11,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="819.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="org.example.csc311cardgame.CardGameController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="541.0" prefWidth="884.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.csc311cardgame.CardGameController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="456.0" minWidth="10.0" prefWidth="401.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="399.0" minWidth="10.0" prefWidth="399.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="472.0" minWidth="10.0" prefWidth="395.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="460.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
@@ -63,7 +63,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="98.0" prefWidth="373.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <HBox alignment="CENTER" prefHeight="128.0" prefWidth="470.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <Button mnemonicParsing="false" prefHeight="52.0" prefWidth="201.0" text="Verify">
                <font>
@@ -72,28 +72,28 @@
             </Button>
          </children>
       </HBox>
-      <HBox layoutX="309.0" layoutY="74.0" prefHeight="313.0" prefWidth="401.0" spacing="1.0" GridPane.rowIndex="1">
+      <HBox layoutX="309.0" layoutY="74.0" maxWidth="-Infinity" prefHeight="313.0" prefWidth="400.0" spacing="1.0" GridPane.rowIndex="1">
          <children>
-            <HBox prefHeight="289.0" prefWidth="204.0">
+            <HBox prefHeight="289.0" prefWidth="204.0" spacing="1.0" style="-fx-border-color: black; -fx-border-width: 5px; -fx-border-style: solid;">
                <children>
                   <ImageView fx:id="leftMostCard" fitHeight="294.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
-            <HBox prefHeight="289.0" prefWidth="154.0">
+            <HBox prefHeight="289.0" prefWidth="154.0" spacing="1.0" style="-fx-border-color: black; -fx-border-width: 5px; -fx-border-style: solid;">
                <children>
                   <ImageView fx:id="leftMiddleCard" fitHeight="294.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
          </children>
       </HBox>
-      <HBox prefHeight="288.0" prefWidth="255.0" spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <HBox maxWidth="-Infinity" prefHeight="288.0" prefWidth="400.0" spacing="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <HBox prefHeight="288.0" prefWidth="219.0">
+            <HBox prefHeight="304.0" prefWidth="191.0" spacing="1.0" style="-fx-border-color: black; -fx-border-width: 5px; -fx-border-style: solid;">
                <children>
                   <ImageView fx:id="rightMiddleCard" fitHeight="294.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
-            <HBox prefHeight="288.0" prefWidth="216.0">
+            <HBox prefHeight="288.0" prefWidth="216.0" spacing="1.0" style="-fx-border-color: black; -fx-border-width: 5px; -fx-border-style: solid;">
                <children>
                   <ImageView fx:id="rightMostCard" fitHeight="294.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>

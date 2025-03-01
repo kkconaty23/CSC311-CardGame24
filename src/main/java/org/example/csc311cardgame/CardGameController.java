@@ -3,12 +3,13 @@ package org.example.csc311cardgame;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CardGameController {
 
@@ -33,6 +34,12 @@ public class CardGameController {
     @FXML
     private TextField solution;
 
+    @FXML
+    public void initialize() {
+        cardMapping(); // makes sure card mapping is ready when the UI is loaded
+    }
+
+    //array of all the card images
     String [] imagePath = {
             "ace_of_clubs.png", "ace_of_diamonds.png", "ace_of_hearts.png", "ace_of_spades.png",
             "2_of_clubs.png", "2_of_diamonds.png", "2_of_hearts.png", "2_of_spades.png",
@@ -49,28 +56,122 @@ public class CardGameController {
             "king_of_clubs.png", "king_of_diamonds.png", "king_of_hearts.png", "king_of_spades.png"
     };
 
+
+
+
     @FXML
     void refreshButtonClick(ActionEvent event) {
-        leftMostCard.setImage(getImage());
+        //chooses random image from inside the array of images and assigns it
+        Card leftMost = chooseImage();
+        Card leftMiddle = chooseImage();
+        Card rightMiddle = chooseImage();
+        Card rightMost = chooseImage();
+
+        //setting the images to which ever random card was generated
+        if (leftMost != null) leftMostCard.setImage(leftMost.getCard());
+        if (leftMiddle != null) leftMiddleCard.setImage(leftMiddle.getCard());
+        if (rightMiddle != null) rightMiddleCard.setImage(rightMiddle.getCard());
+        if (rightMost != null) rightMostCard.setImage(rightMost.getCard());
+
+        // print assigned values
+        System.out.println("Left Most Card Value: " + leftMost.getValue());
+        System.out.println("Left Middle Card Value: " + leftMiddle.getValue());
+        System.out.println("Right Middle Card Value: " + rightMiddle.getValue());
+        System.out.println("Right Most Card Value: " + rightMost.getValue());
+        System.out.println();
     }
 
-    private Image getImage() {
-        int index = (int) (Math.random() * imagePath.length);
+    private Card chooseImage() {
+        int index = (int) (Math.random() * imagePath.length); // generate random index
 
-        // Construct the correct resource path
-        String imagePath = "/images/" + this.imagePath[index];
+        String imagePath = "/card_images/" + this.imagePath[index]; // set image path
+        String imageFileName = this.imagePath[index];//just the image name used for mapping to values
 
-        // Debugging: Print the path
-        System.out.println("Loading image from: " + imagePath);
 
-        // Load image from classpath
-        InputStream stream = getClass().getResourceAsStream(imagePath);
-        if (stream == null) {
+        InputStream stream = getClass().getResourceAsStream(imagePath); // load image
+        if (stream == null) {//error detection
             System.out.println("Error: Image not found at " + imagePath);
+            return null; // handle errors
         }
 
-        return new Image(stream);
+
+
+        Image image = new Image(stream); // create image
+        int cardValue = cardValues.get(imageFileName); //gets card value from the map
+
+        return new Card(image, cardValue); //makes card object from random selection
     }
+
+    //map for all cards and their values
+    private final Map<String, Integer> cardValues = new HashMap<>();
+
+    public void cardMapping() {
+        cardValues.put("ace_of_spades.png", 1);
+        cardValues.put("ace_of_clubs.png", 1);
+        cardValues.put("ace_of_hearts.png", 1);
+        cardValues.put("ace_of_diamonds.png", 1);
+
+        cardValues.put("2_of_spades.png", 2);
+        cardValues.put("2_of_clubs.png", 2);
+        cardValues.put("2_of_hearts.png", 2);
+        cardValues.put("2_of_diamonds.png", 2);
+
+        cardValues.put("3_of_spades.png", 3);
+        cardValues.put("3_of_clubs.png", 3);
+        cardValues.put("3_of_hearts.png", 3);
+        cardValues.put("3_of_diamonds.png", 3);
+
+        cardValues.put("4_of_spades.png", 4);
+        cardValues.put("4_of_clubs.png", 4);
+        cardValues.put("4_of_hearts.png", 4);
+        cardValues.put("4_of_diamonds.png", 4);
+
+        cardValues.put("5_of_spades.png", 5);
+        cardValues.put("5_of_clubs.png", 5);
+        cardValues.put("5_of_hearts.png", 5);
+        cardValues.put("5_of_diamonds.png", 5);
+
+        cardValues.put("6_of_spades.png", 6);
+        cardValues.put("6_of_clubs.png", 6);
+        cardValues.put("6_of_hearts.png", 6);
+        cardValues.put("6_of_diamonds.png", 6);
+
+        cardValues.put("7_of_spades.png", 7);
+        cardValues.put("7_of_clubs.png", 7);
+        cardValues.put("7_of_hearts.png", 7);
+        cardValues.put("7_of_diamonds.png", 7);
+
+        cardValues.put("8_of_spades.png", 8);
+        cardValues.put("8_of_clubs.png", 8);
+        cardValues.put("8_of_hearts.png", 8);
+        cardValues.put("8_of_diamonds.png", 8);
+
+        cardValues.put("9_of_spades.png", 9);
+        cardValues.put("9_of_clubs.png", 9);
+        cardValues.put("9_of_hearts.png", 9);
+        cardValues.put("9_of_diamonds.png", 9);
+
+        cardValues.put("10_of_spades.png", 10);
+        cardValues.put("10_of_clubs.png", 10);
+        cardValues.put("10_of_hearts.png", 10);
+        cardValues.put("10_of_diamonds.png", 10);
+
+        cardValues.put("jack_of_spades.png", 11);
+        cardValues.put("jack_of_clubs.png", 11);
+        cardValues.put("jack_of_hearts.png", 11);
+        cardValues.put("jack_of_diamonds.png", 11);
+
+        cardValues.put("queen_of_spades.png", 12);
+        cardValues.put("queen_of_clubs.png", 12);
+        cardValues.put("queen_of_hearts.png", 12);
+        cardValues.put("queen_of_diamonds.png", 12);
+
+        cardValues.put("king_of_spades.png", 13);
+        cardValues.put("king_of_clubs.png", 13);
+        cardValues.put("king_of_hearts.png", 13);
+        cardValues.put("king_of_diamonds.png", 13);
+    }
+
 
 
 }
