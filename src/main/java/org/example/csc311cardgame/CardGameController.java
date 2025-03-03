@@ -6,12 +6,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
+import javax.script.ScriptException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.example.csc311cardgame.ExpressionEvaluator.evaluate;
+
 public class CardGameController {
+
+    @FXML
+    private GridPane baseLayer;
 
     @FXML
     private ImageView leftMiddleCard;
@@ -35,8 +47,22 @@ public class CardGameController {
     private TextField solution;
 
     @FXML
+    private Button hintButton;
+
+    @FXML
+    private Button verifyButton;
+
+    @FXML
+    private Text checkText;
+
+
+
+    @FXML
     public void initialize() {
         cardMapping(); // makes sure card mapping is ready when the UI is loaded
+        baseLayer.setStyle("-fx-background-color: #228B22;");
+
+
     }
 
     //array of all the card images
@@ -55,6 +81,30 @@ public class CardGameController {
             "queen_of_clubs.png", "queen_of_diamonds.png", "queen_of_hearts.png", "queen_of_spades.png",
             "king_of_clubs.png", "king_of_diamonds.png", "king_of_hearts.png", "king_of_spades.png"
     };
+
+    @FXML
+    void onHintButtonClick(ActionEvent event) {
+
+
+    }
+
+    @FXML
+    void verifyButtonClick(ActionEvent event) throws ScriptException {
+
+        if(playerEntry.getText().equals("") || playerEntry.getText() == null) {
+            checkText.setText("No equation");
+        }
+
+
+        //once verify button is clicked it evaluates the player input and checks if it equals 24 using xp4j
+        double result = evaluate(playerEntry.getText());
+        if(result == 24){
+            checkText.setText("Correct!");
+        }
+        else{
+            checkText.setText("Incorrect!");
+        }
+    }
 
 
 
@@ -79,6 +129,9 @@ public class CardGameController {
         System.out.println("Right Middle Card Value: " + rightMiddle.getValue());
         System.out.println("Right Most Card Value: " + rightMost.getValue());
         System.out.println();
+
+
+
     }
 
     private Card chooseImage() {
