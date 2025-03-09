@@ -156,7 +156,7 @@ public class CardGameController {
             }
         }
 
-        return "Hint: No solution found with given numbers."; //no possible solution returns
+        return "Hint: No solution found."; //no possible solution returns
     }
 
     private List<int[]> generatePermutations(List<Integer> cardValues) {
