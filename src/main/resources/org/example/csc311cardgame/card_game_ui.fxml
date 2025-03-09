@@ -39,7 +39,7 @@
          <children>
             <Text fx:id="checkText" fill="#c63629" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="131.13671875">
                <font>
-                  <Font name="System Bold" size="28.0" />
+                  <Font name="System Bold" size="20.0" />
                </font>
             </Text>
             <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refreshButtonClick" prefHeight="49.0" prefWidth="148.0" text="Refresh">

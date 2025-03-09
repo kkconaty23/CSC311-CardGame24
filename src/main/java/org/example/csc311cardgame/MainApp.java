@@ -11,7 +11,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("card_game_ui.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 884, 608);
+        Scene scene = new Scene(fxmlLoader.load(), 872, 600);
         stage.setTitle("Card Game-24!");
         stage.setScene(scene);
         stage.show();

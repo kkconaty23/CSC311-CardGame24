@@ -2,7 +2,11 @@ package org.example.csc311cardgame;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,18 +14,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import javax.script.ScriptException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.example.csc311cardgame.ExpressionEvaluator.evaluate;
 
 public class CardGameController {
 
+    @FXML
+    public Label hintLabel;
     @FXML
     private GridPane baseLayer;
 
@@ -55,12 +60,28 @@ public class CardGameController {
     @FXML
     private Text checkText;
 
+    @FXML
+    private List<Integer> currentCardValues;
 
 
+    private Card leftMost;
+    private Card rightMost;
+    private Card leftMiddle;
+    private Card rightMiddle;
+
+
+    /**
+     * initialize the game space
+     */
     @FXML
     public void initialize() {
         cardMapping(); // makes sure card mapping is ready when the UI is loaded
-        baseLayer.setStyle("-fx-background-color: #228B22;");
+
+        if (baseLayer != null) {
+            baseLayer.setStyle("-fx-background-color: #228B22;");
+        } else {
+            System.out.println("Error: baseLayer is null!");
+        }
 
 
     }
@@ -82,32 +103,137 @@ public class CardGameController {
             "king_of_clubs.png", "king_of_diamonds.png", "king_of_hearts.png", "king_of_spades.png"
     };
 
+    /**
+     * hint button will provide player with a hint for the cards shown
+     * @param event
+     */
     @FXML
     void onHintButtonClick(ActionEvent event) {
+        try {
+            //make the hint string from the card values
+            String hint = generateSolutionFormat(currentCardValues);
 
+            // load  hint window
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/csc311cardgame/hints.fxml"));
+            Parent root = loader.load();
 
+            // set hint text
+            HintController hintController = loader.getController();
+            hintController.setHintText(hint);
+
+            //show new window
+            Stage stage = new Stage();
+            stage.setTitle("Hint");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    /**
+     * finds an equation that results in 24 and returns its format with placeholders
+     */
+    private String generateSolutionFormat(List<Integer> cardValues) { //takes in the 4 present card valuers
+        if (cardValues.size() != 4) {
+            return "Hint: A valid solution requires exactly 4 numbers.";
+        }
+
+        List<String> operators = Arrays.asList("+", "-", "*", "/"); //put the operators in a list
+        List<int[]> permutations = generatePermutations(cardValues);
+        List<String[]> operatorCombinations = generateOperatorCombinations();
+
+        // mix different number orders and operator combinations
+        for (int[] numbers : permutations) {
+            for (String[] ops : operatorCombinations) {
+                String equation = "(" + numbers[0] + ops[0] + numbers[1] + ")" + ops[1] + numbers[2] + ops[2] + numbers[3];
+
+                if (evaluate(equation) == 24) {
+                    // replace numbers with underscores for the hint format
+                    String hint = equation.replaceAll("\\d+", "_"); // \\d+ replaces all numbers with _
+                    return "Hint: " + hint;
+                }
+            }
+        }
+
+        return "Hint: No solution found with given numbers."; //no possible solution returns
+    }
+
+    private List<int[]> generatePermutations(List<Integer> cardValues) {
+        List<int[]> permutations = new ArrayList<>();
+        Integer[] arr = cardValues.toArray(new Integer[0]);
+        permute(arr, 0, permutations);
+        return permutations;
+    }
+
+    private void permute(Integer[] arr, int index, List<int[]> permutations) {
+        if (index == arr.length) {
+            permutations.add(Arrays.stream(arr).mapToInt(Integer::intValue).toArray());
+            return;
+        }
+        for (int i = index; i < arr.length; i++) {
+            swap(arr, i, index);
+            permute(arr, index + 1, permutations);
+            swap(arr, i, index);
+        }
+    }
+
+    private void swap(Integer[] arr, int i, int j) {
+        Integer temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    /**
+     * Generates all possible operator combinations.
+     */
+    private List<String[]> generateOperatorCombinations() {
+        List<String[]> combinations = new ArrayList<>();
+        String[] operators = {"+", "-", "*", "/"};
+        for (String op1 : operators) {
+            for (String op2 : operators) {
+                for (String op3 : operators) {
+                    combinations.add(new String[]{op1, op2, op3});
+                }
+            }
+        }
+        return combinations;
+    }
+
+
+
+
 
     @FXML
     void verifyButtonClick(ActionEvent event) throws ScriptException {
 
-        if(playerEntry.getText().equals("") || playerEntry.getText() == null) {
-            checkText.setText("No equation");
+        String input = playerEntry.getText().trim();//get rid of any unnecessary white space
+
+        if (input.isEmpty()) {
+            checkText.setText("No equation entered");
+            return;
         }
 
+        // Extract numbers from input
+        List<Integer> inputValues = Arrays.stream(input.split("[^0-9]+")) // splits by non-numeric characters
+                .filter(s -> !s.isEmpty()) // remove empty strings
+                .map(Integer::parseInt) // convert to int
+                .collect(Collectors.toList());
 
-        //once verify button is clicked it evaluates the player input and checks if it equals 24 using xp4j
-        double result = evaluate(playerEntry.getText());
-        if(result == 24){
+        //  all input values are not from the displayed cards show error
+        if (!new HashSet<>(currentCardValues).containsAll(inputValues)) {
+            checkText.setText("Use only displayed card values!");
+            return;
+        }
+
+        // Evaluate the expression
+        double result = evaluate(input);
+        if (result == 24) {
             checkText.setText("Correct!");
-        }
-        else{
+        } else {
             checkText.setText("Incorrect!");
         }
     }
-
-
-
 
     @FXML
     void refreshButtonClick(ActionEvent event) {
@@ -130,8 +256,8 @@ public class CardGameController {
         System.out.println("Right Most Card Value: " + rightMost.getValue());
         System.out.println();
 
-
-
+        currentCardValues = Arrays.asList(leftMost.getValue(), leftMiddle.getValue(), rightMiddle.getValue(), rightMost.getValue());
+        System.out.println("Selected Card Values: " + currentCardValues);
     }
 
     private Card chooseImage() {
@@ -226,5 +352,7 @@ public class CardGameController {
     }
 
 
+    public void closeWindow(ActionEvent actionEvent) {
 
+    }
 }
